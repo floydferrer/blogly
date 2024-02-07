@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <title>Add Post</title>
+</head>
+<body>
+    <h1>Add Post</h1>
+    <form action="/users/{{user.id}}/new-post" method="POST">
+        <label for="title">Title</label>
+        <input type="text" name="title">
+        <label for="content">Content</label>
+        <input type="text" name="content">
+        <button type="submit" class="btn btn-success mt-2">Submit</button>
+    </form>
+    <button onclick="window.location.href='/users/{{user.id}}';" class="btn btn-primary mt-2">Cancel</button>
+</body>
+</html>
