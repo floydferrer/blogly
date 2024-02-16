@@ -51,15 +51,15 @@ Here is what you should build:
 
 ![list.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/848abbd6-ee81-438d-9f93-b6739df62d20/list.png)
 
-1. **New User Form**
+2. **New User Form**
 
 ![new.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f793ac53-a4d8-4e36-8a65-8e4adcc2c0cc/new.png)
 
-1. **User Detail Page**
+3. **User Detail Page**
 
 ![detail.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1141fb30-c990-4440-b3b1-081a04246ba0/detail.png)
 
-1. **User Edit Page**
+4. **User Edit Page**
 
 ![edit.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e1b27f66-7eb4-4deb-af28-ce1f3ee17198/edit.png)
 
@@ -170,15 +170,15 @@ Here is what you should build:
 
 ![user-w-posts.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e93f8ff7-04ff-4ec7-b0f7-cec22a5f308e/user-w-posts.png)
 
-1. **New Post Form**
+2. **New Post Form**
 
 ![add-post.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/740c1c4f-b709-429c-8c09-b14824dbdaaf/add-post.png)
 
-1. **Post Detail Page**
+3. **Post Detail Page**
 
 ![detail-post.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5fc525e7-3a42-4059-9418-076af814b31f/detail-post.png)
 
-1. **Post Edit Page**
+4. **Post Edit Page**
 
 ![edit-post.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e8fe6a75-9cbc-4d3e-8756-a861e08a435c/edit-post.png)
 
@@ -237,3 +237,97 @@ If you try to delete a user that has posts, you’ll get an ***IntegrityError**
 When a user is deleted, the related posts should be deleted, too.
 
 You can find help for this at [Cascades](https://docs.sqlalchemy.org/en/latest/orm/cascades.html)>`_
+
+# Many to Many-Blogly
+
+# **Blogly**
+
+## **Part Three: Add M2M Relationship**
+
+The last part will be to add a “tagging” feature.
+
+### **Tag Model**
+
+![Screen Shot 2023-05-08 at 3.03.13 PM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a4b764dd-ee1f-450a-a913-e14353e18216/Screen_Shot_2023-05-08_at_3.03.13_PM.png)
+
+The site will have a table of tags — there should be an SQLAlchemy model for this:
+
+- ***id***
+- ***name***, (unique!)
+
+There should also be a model for ***PostTag***, which joins together a ***Post*** and a ***Tag***. It will have foreign keys for the both the ***post_id*** and ***tag_id***. Since we don’t want the same post to be tagged to the same tag more than once, we’ll want the combination of post + tag to be unique. It also makes sense that neither the ***post_id*** nor ***tag_id*** can be null. Therefore, we’ll use a “composite primary key” for this table— a primary key made of more than one field. You may have to do some research to learn how to do this in SQLAlchemy.
+
+Add relationships so you can see the ***.tags*** for a post, and the ***.posts*** for a tag.
+
+**STOP** and play around with this feature in ***IPython*** before continuing.
+
+### **User Interface**
+
+1. **Add Tag**
+
+![Screen Shot 2023-05-08 at 3.04.45 PM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/adcb908c-31bc-469e-934a-f7df80b75dd2/Screen_Shot_2023-05-08_at_3.04.45_PM.png)
+
+2. **Edit Tag**
+
+![Screen Shot 2023-05-08 at 3.09.35 PM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/41092caa-0fb7-43ff-a794-1a2be68296cf/Screen_Shot_2023-05-08_at_3.09.35_PM.png)
+
+3. **List Tag**
+
+![Screen Shot 2023-05-08 at 3.11.42 PM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c61055c9-d050-415a-88f2-f5fdfb644dd5/Screen_Shot_2023-05-08_at_3.11.42_PM.png)
+
+4. **Show Tag**
+
+![Screen Shot 2023-05-08 at 3.14.48 PM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/527c480e-63a4-4d62-a97a-25f278ad4d3d/Screen_Shot_2023-05-08_at_3.14.48_PM.png)
+
+5.  **Show Post With Tags**
+    
+    ![Screen Shot 2023-05-08 at 3.13.19 PM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e236b58b-1650-480d-98a7-9b276a634347/Screen_Shot_2023-05-08_at_3.13.19_PM.png)
+    
+6. **Add Post With Tags**
+
+![Screen Shot 2023-05-08 at 3.16.01 PM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/82c29a03-c0f8-4e9f-b985-749ab10a571d/Screen_Shot_2023-05-08_at_3.16.01_PM.png)
+
+7. **Edit Post With Tags**
+
+![Screen Shot 2023-05-08 at 3.17.48 PM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2ed79536-7149-430c-85e8-ef1a220484da/Screen_Shot_2023-05-08_at_3.17.48_PM.png)
+
+### **Add Routes**
+
+**GET */tags :*** Lists all tags, with links to the tag detail page.
+
+**GET */tags/[tag-id] :*** Show detail about a tag. Have links to edit form and to delete.
+
+**GET */tags/new :*** Shows a form to add a new tag.
+
+**POST */tags/new :*** Process add form, adds tag, and redirect to tag list.
+
+**GET */tags/[tag-id]/edit :*** Show edit form for a tag.
+
+**POST */tags/[tag-id]/edit :*** Process edit form, edit tag, and redirects to the tags list.
+
+**POST */tags/[tag-id]/delete :*** Delete a tag.
+
+### **Update Routes for Posts**
+
+Update the route that shows a post so that it shows all the tags for that post.
+
+Update the routes for adding/editing posts so that it shows a listing of the tags and lets you pick which tag(s) apply to that post. (You can use whatever form element you want here: a multi-select, a list of checkboxes, or any other way you can solve this.
+
+<aside>
+💡 **Hint:** The normal way to get a value from a form, `request.form['key']`, only returns *one* value from this form. To get all of the values for that key in the form, you’ll want to investigate ***.getlist***.
+
+</aside>
+
+## **Further Study**
+
+### **Update Tag Add/Edit Forms**
+
+Edit these forms to let you pick posts for this tag.
+
+1. **Edit Tag With Posts**
+
+![Screen Shot 2023-05-08 at 3.19.18 PM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/3a210fe9-2725-439b-a68e-0e8cccf8faab/Screen_Shot_2023-05-08_at_3.19.18_PM.png)
+
+2. If you made a homepage, make this show tags, too:
+
+![Screen Shot 2023-05-08 at 3.21.10 PM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b925b395-caac-44ef-8d53-180452246829/Screen_Shot_2023-05-08_at_3.21.10_PM.png)
