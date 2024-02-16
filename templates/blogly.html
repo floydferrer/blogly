@@ -1,17 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users List</title>
-</head>
-<body>
-    <h1>Users</h1>
-    <ul>
-        {% for user in users %}
-            <li>{{user.first_name}} {{user.last_name}}</li>
-        {% endfor%}
+{% extends 'base.html' %}
+{% block title %}Blogly{% endblock %}
+{% block content %}
+    <h2 class="display-2">Recent Posts:</h2>
+    <ul class="list-group">
+    {% for post in posts %}
+        <li>
+        <a href="/users/{{post.user_id}}/post-{{post.id}}" class="display-6 list-group-item list-group-item-action bg-dark text-white border-0">{{post.title}}</a>
+        </li>
+        <small class="ms-4">
+            By: {{post.user.first_name}} {{post.user.last_name}}<br>
+            Created: {{post.friendly_time}}
+        </small>
+    {% endfor%}
     </ul>
-    <button onclick="window.location.href='/users/new';">Add user</button>
-</body>
-</html>
+{% endblock %}

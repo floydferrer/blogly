@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Edit Tag{% endblock %}
+{% block content %}
+    <h1 class="display-1">Edit Tag</h1>
+    <div class="container-fluid">
+        <form action="/tags/{{tag.id}}/edit" method="POST">
+            <input class="display-6" type="text" name="tag" value="{{tag.name}}" minlength="3" style="width: 33%;">
+            <ul class="list-group">
+                {% for post in posts %}
+                    <li class="list-group-item list-group-item-action bg-dark text-white border-0">
+                    {% if post in tag.posts %}
+                        <input type="checkbox" name="posts" value="{{post.id}}" id="post_{{post_id}}" checked>
+                    {% else %}
+                        <input type="checkbox" name="posts" value="{{post.id}}" id="post_{{post_id}}">
+                    {% endif %}
+                    <label class="display-6" for="post_{{post.id}}">{{post.title}}</label>
+                    {% endfor %}
+                    </li>
+            </ul>
+            <button type="submit" class="btn btn-outline-success">Edit</button>
+        </form>
+        <button onclick="window.location.href='/tags/{{tag.id}}';" class="btn btn-outline-primary">Cancel</button>
+    </div>
+{% endblock %}

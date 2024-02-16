@@ -35,6 +35,7 @@ class UserViewsTestCase(TestCase):
         """Clean up any fouled transaction."""
 
         db.session.rollback()
+        User.query.delete()
 
     def test_list_users(self):
         with app.test_client() as client:
@@ -44,21 +45,29 @@ class UserViewsTestCase(TestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertIn('Test User', html)
 
-    # def test_show_user(self):
-    #     with app.test_client() as client:
-    #         resp = client.get(f'user/{self.user_id}')
-    #         html = resp.get_data(as_text=True)
+    def test_show_user(self):
+        with app.test_client() as client:
+            resp = client.get(f'users/{self.user_id}')
+            html = resp.get_data(as_text=True)
 
-    #         self.assertEqual(resp.status_code, 200)
-    #         self.assertIn('<h1>Image: www.test.com</h1>', html)
-    #         self.assertIn('<h1>First Name: Test</h1>', html)
-    #         self.assertIn('<h1>Last Name: User</h1>', html)
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('<img src="www.test.com" class="col-3">', html)
+            self.assertIn('<h1 class="display-1">First Name: Test</h1>', html)
+            self.assertIn('<h1 class="display-1">Last Name: User</h1>', html)
 
-    # def test_add_user(self):
-    #     with app.test_client() as client:
-    #         d = {'first_name': 'Test2', 'last_name' :'User2', 'image_url': 'www.test2.com'}
-    #         resp = client.post("/", data=d, follow_redirects=True)
-    #         html = resp.get_data(as_text=True)
+    def test_add_user(self):
+        with app.test_client() as client:
+            d = {'first-name': 'Test2', 'last-name' :'User2', 'image-url': 'www.test2.com'}
+            resp = client.post("/users/new", data=d, follow_redirects=True)
+            html = resp.get_data(as_text=True)
 
-    #         self.assertEqual(resp.status_code, 200)
-    #         self.assertIn("<h1>Test2 User2</h1>", html)
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('Test2 User2', html)
+    
+    def test_delete_user(self):
+        with app.test_client() as client:
+            resp = client.post("/users/1/delete", follow_redirects=True)
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertNotIn('Test2 User2', html)

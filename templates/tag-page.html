@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}{{tag.name}}{% endblock %}
+{% block content %}
+    <h1 class="display-1">Posts tagged with {{tag.name}}</h1>
+    <ul class="list-group">
+            {% for post in tag.posts %}
+                <li><a href="/users/{{post.user_id}}/post-{{post.id}}" class="display-6 list-group-item list-group-item-action bg-dark text-white border-0">{{post.title}}</a></li>
+                <small class="ms-4">By: {{post.user.first_name}} {{post.user.last_name}}</small>
+            {% endfor %}
+    </ul>
+    <button onclick="window.location.href='/tags/{{tag.id}}/edit';" class="btn btn-outline-warning mt-2">Edit Tag</button>
+    <form action="/tags/{{tag.id}}/delete" method="POST">
+        <button class="btn btn-outline-danger mt-2">Delete Tag</button>
+    </form>
+{% endblock %}

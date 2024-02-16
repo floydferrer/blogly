@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Posts{% endblock %}
+{% block content %}
+    <h1 class="display-1">Posts</h1>
+    <ul class="list-group">
+    {% for post in posts %}
+        <li><a href="/users/{{post.user.id}}/post-{{post.id}}" class="display-6 list-group-item list-group-item-action bg-dark text-white border-0">{{post.title}}</a></li>    
+        <small class="ms-4">By: {{post.user.first_name}} {{post.user.last_name}}</small>
+        <small class="ms-4">Created: {{post.friendly_time}}</small>
+    {% endfor%}
+    </ul>
+{% endblock %}
